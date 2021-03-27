@@ -1,0 +1,152 @@
+﻿@model MvcAssignment.Models.RegistrationModel
+<html>
+<head>
+    <title>Registration</title>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <script type="text/javascript">
+        $(document).ready(function ()
+        {
+            $("#State1").change(function ()
+            {      
+                $.ajax({  
+                    type: "post",  
+                    url: "/Member/GetStateID",
+                    data: { NewStateid: $('#State1').val() },  
+                    datatype: "json",  
+                    traditional: true,  
+                    success: function (data) {  
+                        var City = "<select id='FilterCity'>";  
+                        City = City + '<option value="">Select City</option>';  
+                        for (var i = 0; i < data.length; i++)  
+                        {  
+                            City = City + '<option value=' + data[i].Value + '>' + data[i].Text + '</option>';  
+                        }  
+                        City = City + '</select>';  
+                        $('#citydiv1').html(City);  
+                    }  
+                });  
+            });  
+        });  
+    </script>
+    <style>
+        body {
+            background-color: gray;
+        }
+
+        .container {
+            margin-top: 60px;
+            border-radius: 10px;
+            background-color: black;
+        }
+
+        h2 {
+            color: white;
+            text-shadow: 2px 2px 25px orange;
+        }
+
+        input {
+            width: 90%;
+            outline: none;
+            border-color:orange;
+            border-top: none;
+            border-left: none;
+            border-right: none;
+            padding: 7px 0;
+            margin-top: 10px;
+            font-size: 16px;
+            color: #fffdfd;
+            background: transparent;
+        }
+
+        ::  placeholder {
+            font-size: 15px;
+            color: dimgray;
+        }
+
+        select {
+            width: 90%;
+            background: transparent;
+            color: gray;
+            margin-top: 20px;
+            height: 35px;
+            font-size: 16px;
+            border-radius: 20px;
+            border-color: orange;
+            outline: none;
+        }
+
+        option {
+            background-color: black;
+        }
+
+        .SubmitBtn {
+            width: 40%;
+            height: 38px;
+            background-color: black;
+            color: orange;
+            font-weight: bold;
+            border-radius: 30px;
+            margin-top: 20px;
+            margin-bottom: 10px;
+            font-size: 18px
+        }
+
+        form {
+            margin-left: 30px;
+        }
+
+        .Location {
+            display: flex;
+        }
+
+        #citydiv {
+            margin-right: -10px;
+        }
+    </style>  
+</head>
+<body>
+    <div class="Mian">
+        <div class="col-md-4 container">
+            <form action="" method="post">
+                <h2>Registration Form</h2>
+                @using (Html.BeginForm("Register", "Member"))
+                {
+                    <div>
+                        @Html.TextBoxFor(FirstName => FirstName.FirstName, new { @placeholder = "Enter first name" })
+                    </div>
+                    <div>
+                        @Html.TextBoxFor(LastName => LastName.LastName, new { @placeholder = "Enter last name" })
+                    </div>
+                    <div>
+                        @Html.TextBoxFor(Email => Email.Email, new { @placeholder = "Enter Email" })
+                    </div>
+                    <div>
+                        @Html.TextBoxFor(RollNo => RollNo.RollNo, new { @placeholder = "Enter Roll no" })
+                    </div>
+                    <div>
+                        @Html.DropDownListFor(Gender => Gender.GenderList, new SelectList(Model.GenderList, "ID", "Gender"), "Select Gender")
+                    </div>
+                    <div>
+                        @Html.DropDownListFor(Cource => Cource.Courcelist, new SelectList(Model.Courcelist, "Cource_id", "Cource_name"), "Select Cource")
+                    </div> 
+                    <div class="Location" style="width: 100%" ;>
+                        <div id="citydiv" style="width: 49%;">
+                            @Html.DropDownListFor(State => State.StateList, new  SelectList(Model.StateList, "State_id", "State_name"), "Select State", new { @id = "State1" })
+                        </div>
+                        <div id="citydiv1" style="width: 49%;">
+                            @Html.DropDownListFor(City => City.City_id,new List<SelectListItem>(),"Select City",new { @id="FilterCity"});
+                        </div>
+                    </div>
+
+                    <div>
+                        <input class="SubmitBtn" type="submit" value="Register">
+                    </div>
+                }
+
+            </form>
+        </div>
+    </div>
+    
+</body>
+</html>
